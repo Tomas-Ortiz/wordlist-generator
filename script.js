@@ -34,13 +34,14 @@ $(document).ready(function () {
     '/',
   ];
   var finalList = [];
-  var wordlist_IterationN1;
-  var wordlist_IterationN2 = [];
-  var wordlist_IterationN3 = [];
-  var wordlist_IterationN4 = [];
-  var wordlist_IterationN5 = [];
-  var wordlist_IterationN6 = [];
-  var wordlist_IterationN7 = [];
+  var wordlist_lowerAndUpperCaseWords = [];
+  var wordlist_wordsWithNumbers = [];
+  var wordlist_wordsWithSymbols = [];
+  var wordlist_concatenationOfTwoWords = [];
+  var wordlist_concatenationOfThreeWords = [];
+  var wordlist_allConcatenations = [];
+  var wordlist_basicWords = [];
+  var wordlist_wordsWithDates = [];
   var includeNumbers = true;
   var includeSymbols = true;
   var includeDate = false;
@@ -62,7 +63,7 @@ $(document).ready(function () {
       if ($('#output').val()) {
         $('#spinner').hide();
       }
-    }, 0);
+    }, 100);
   });
 
   $('#clearInputs').click(function () {
@@ -87,13 +88,14 @@ $(document).ready(function () {
     words = [];
     finalList = [];
     wordlist = [];
-    wordlist_IterationN1 = [];
-    wordlist_IterationN2 = [];
-    wordlist_IterationN3 = [];
-    wordlist_IterationN4 = [];
-    wordlist_IterationN5 = [];
-    wordlist_IterationN6 = [];
-    wordlist_IterationN7 = [];
+    wordlist_lowerAndUpperCaseWords = [];
+    wordlist_wordsWithNumbers = [];
+    wordlist_wordsWithSymbols = [];
+    wordlist_concatenationOfTwoWords = [];
+    wordlist_concatenationOfThreeWords = [];
+    wordlist_allConcatenations = [];
+    wordlist_basicWords = [];
+    wordlist_wordsWithDates = [];
   }
 
   function showFileSize() {
@@ -114,158 +116,160 @@ $(document).ready(function () {
       }
     });
 
-    wordlist_IterationN1 = words;
-
-    if (words.length === 1) {
+    if (words.length > 0) {
       if (includeNumbers) {
-        wordlist_IterationN1.forEach((word, index) => {
+        words.forEach((word, index) => {
           applyAllLowerAndUpperCase(word);
           applyRemoveLetters(word);
           applyAllNumbers(word);
+          firstLetterCapitalizedAndTheOriginalWord(word);
         });
       } else {
-        wordlist_IterationN1.forEach((word, index) => {
+        words.forEach((word, index) => {
           applyAllLowerAndUpperCase(word);
           applyRemoveLetters(word);
-        });
-      }
-
-      if (includeSymbols) {
-        wordlist_IterationN1.forEach((word, index) => {
-          applyAllSymbols(word);
+          firstLetterCapitalizedAndTheOriginalWord(word);
         });
       }
 
       if (includeDate) {
-        wordlist_IterationN1.forEach((word, index) => {
+        words.forEach((word, index) => {
           applyAllDates(word);
         });
       }
 
+      if (includeSymbols) {
+        words.forEach((word, index) => {
+          applyAllSymbols(word);
+        });
+      }
+    }
+
+    if (words.length === 1) {
       // Eliminar valores repetidos
-      wordlist_IterationN2 = Array.from(new Set(wordlist_IterationN2));
+      wordlist_lowerAndUpperCaseWords = Array.from(
+        new Set(wordlist_lowerAndUpperCaseWords)
+      );
 
       if (includeNumbers) {
-        wordlist_IterationN2.forEach((word, index) => {
+        wordlist_lowerAndUpperCaseWords.forEach((word, index) => {
           applyAllNumbers(word);
         });
       }
 
       if (includeSymbols) {
-        wordlist_IterationN2.forEach((word, index) => {
+        wordlist_lowerAndUpperCaseWords.forEach((word, index) => {
           applyAllSymbols(word);
         });
       }
 
       if (includeDate) {
-        wordlist_IterationN2.forEach((word, index) => {
+        wordlist_lowerAndUpperCaseWords.forEach((word, index) => {
           applyAllDates(word);
         });
-      }
 
-      if (includeSymbols) {
-        wordlist_IterationN3.forEach((word, index) => {
-          applySymbolsN1_N2(word);
+        wordlist_wordsWithNumbers.forEach((word, index) => {
+          applyAllDates(word, false);
         });
-      }
 
-      if (includeDate) {
-        wordlist_IterationN3.forEach((word, index) => {
-          applyAllDates(word);
+        wordlist_wordsWithSymbols.forEach((word, index) => {
+          applyAllDates(word, false);
+        });
+
+        wordlist_wordsWithDates.forEach((word, index) => {
+          applySymbolsN1_N2(word, false);
+          applyNumbersToN6(word, false);
         });
       }
 
       if (includeNumbers) {
-        wordlist_IterationN4.forEach((word, index) => {
-          applyNumbersToNN2(word);
+        wordlist_wordsWithSymbols.forEach((word, index) => {
+          applyNumbersToN6(word, false);
+        });
+      }
+
+      if (includeSymbols) {
+        wordlist_wordsWithNumbers.forEach((word, index) => {
+          applySymbolsN1_N2(word, false);
         });
       }
     } else if (words.length > 1) {
-      if (includeNumbers) {
-        wordlist_IterationN1.forEach((word, index) => {
-          applyAllLowerAndUpperCase(word);
-          applyRemoveLetters(word);
-          applyAllNumbers(word);
-        });
-      } else {
-        wordlist_IterationN1.forEach((word, index) => {
-          applyAllLowerAndUpperCase(word);
-          applyRemoveLetters(word);
-        });
-      }
-
-      if (includeSymbols) {
-        wordlist_IterationN1.forEach((word, index) => {
-          applySymbolsN1_N2_N5(word);
-          replaceLettersBySymbols(word);
-        });
-      }
-
-      if (includeDate) {
-        wordlist_IterationN1.forEach((word, index) => {
-          applyAllDates(word);
-        });
-      }
-
       let newWord;
 
       //word1: hola, word2: test | output: HolaTest
       if (words.length === 2) {
-        wordlist_IterationN2.forEach((word1) => {
-          wordlist_IterationN2.forEach((word2) => {
+        wordlist_lowerAndUpperCaseWords.forEach((word1) => {
+          wordlist_lowerAndUpperCaseWords.forEach((word2) => {
             newWord = word1 + word2;
             wordlist.push(newWord);
-            wordlist_IterationN5.push(newWord);
+          });
+        });
+
+        wordlist_basicWords.forEach((word1) => {
+          wordlist_basicWords.forEach((word2) => {
+            newWord = word1 + word2;
+            wordlist_concatenationOfTwoWords.push(newWord);
           });
         });
 
         //word1: Hola, word2: Test, word3: Tecnologia | output: HolaTestTecnologia
       } else if (words.length === 3) {
-        wordlist_IterationN2.forEach((word1) => {
-          wordlist_IterationN2.forEach((word2) => {
-            wordlist_IterationN2.forEach((word3) => {
+        wordlist_lowerAndUpperCaseWords.forEach((word1) => {
+          wordlist_lowerAndUpperCaseWords.forEach((word2) => {
+            wordlist_lowerAndUpperCaseWords.forEach((word3) => {
               newWord = word1 + word2;
               wordlist.push(newWord + word3);
-              wordlist_IterationN6.push(newWord);
+            });
+          });
+        });
+
+        wordlist_basicWords.forEach((word1) => {
+          wordlist_basicWords.forEach((word2) => {
+            wordlist_basicWords.forEach((word3) => {
+              newWord = word1 + word2;
+              wordlist_concatenationOfThreeWords.push(newWord + word3);
             });
           });
         });
       }
 
-      // Se coloca en un array todas las concatenaciones realizadas previamente (wordlist_IterationN5 y wordlist_IterationN6)
-      wordlist_IterationN7 = wordlist_IterationN5.concat(wordlist_IterationN6);
-
-      // Eliminar valores repetidos
-      wordlist_IterationN7 = Array.from(new Set(wordlist_IterationN7));
+      // Se coloca en un array todas las concatenaciones realizadas previamente
+      wordlist_allConcatenations = wordlist_concatenationOfTwoWords.concat(
+        wordlist_concatenationOfThreeWords
+      );
 
       if (includeNumbers) {
-        wordlist_IterationN7.forEach((word, index) => {
-          applyNumbersToN8(word);
+        wordlist_allConcatenations.forEach((word, index) => {
+          applyAllNumbers(word);
         });
       }
 
       if (includeSymbols) {
-        wordlist_IterationN7.forEach((word, index) => {
+        wordlist_allConcatenations.forEach((word, index) => {
           applySymbolsN1_N2(word);
           replaceLettersBySymbols(word);
         });
       }
 
       if (includeDate) {
-        wordlist_IterationN7.forEach((word, index) => {
+        wordlist_allConcatenations.forEach((word, index) => {
           applyAllDates(word);
         });
       }
 
-      /*
-          wordlist_IterationN3 = Array.from(new Set(wordlist_IterationN3));
+      if (includeNumbers) {
+        wordlist_wordsWithSymbols.forEach((word, index) => {
+          applyNumbersToN2(word, false);
+        });
+      }
 
-          wordlist_IterationN3.forEach((word, index) => {
-            symbolsN1(word);
-            symbolsN2(word);
-          });
-          */
+      if (includeSymbols) {
+        wordlist_wordsWithNumbers.forEach((word, index) => {
+          applySymbolsN1_N2(word, false);
+        });
+      }
     }
+
     showOutput();
   }
 
@@ -281,24 +285,24 @@ $(document).ready(function () {
     document.body.removeChild(link);
   });
 
-  function applyAllSymbols(word) {
-    symbolsN1(word);
-    symbolsN2(word);
-    symbolsN3(word);
-    symbolsN4(word);
-    symbolsN5(word);
-    replaceLettersBySymbols(word);
+  function applyAllSymbols(word, saveInSymbolsArray = true) {
+    symbolsN1(word, saveInSymbolsArray);
+    symbolsN2(word, saveInSymbolsArray);
+    symbolsN3(word, saveInSymbolsArray);
+    symbolsN4(word, saveInSymbolsArray);
+    symbolsN5(word, saveInSymbolsArray);
+    replaceLettersBySymbols(word, saveInSymbolsArray);
   }
 
-  function applySymbolsN1_N2(word) {
-    symbolsN1(word);
-    symbolsN2(word);
+  function applySymbolsN1_N2(word, saveInSymbolsArray = true) {
+    symbolsN1(word, saveInSymbolsArray);
+    symbolsN2(word, saveInSymbolsArray);
   }
 
-  function applySymbolsN1_N2_N5(word) {
-    symbolsN1(word);
-    symbolsN2(word);
-    symbolsN5(word);
+  function applySymbolsN1_N2_N5(word, saveInSymbolsArray = true) {
+    symbolsN1(word, saveInSymbolsArray);
+    symbolsN2(word, saveInSymbolsArray);
+    symbolsN5(word, saveInSymbolsArray);
   }
 
   function applyAllLowerAndUpperCase(word) {
@@ -317,37 +321,42 @@ $(document).ready(function () {
     alternateUpperAndLowerCase(word);
   }
 
-  function applyAllNumbers(word) {
-    numbersN1(word);
-    numbersN2(word);
-    numbersN3(word);
-    numbersN4(word);
-    numbersN5(word);
-    numbersN6(word);
-    numbersN7(word);
-    numbersN8(word);
-    numbersN9(word);
-    numbersN10(word);
-    numbersN11(word);
-    numbersN12(word);
-    numbersN13(word);
-    numbersN14(word);
+  function applyAllNumbers(word, saveInNumbersArray = true) {
+    numbersN1(word, saveInNumbersArray);
+    numbersN2(word, saveInNumbersArray);
+    numbersN3(word, saveInNumbersArray);
+    numbersN4(word, saveInNumbersArray);
+    numbersN5(word, saveInNumbersArray);
+    numbersN6(word, saveInNumbersArray);
+    numbersN7(word, saveInNumbersArray);
+    numbersN8(word, saveInNumbersArray);
+    numbersN9(word, saveInNumbersArray);
+    numbersN10(word, saveInNumbersArray);
+    numbersN11(word, saveInNumbersArray);
+    numbersN12(word, saveInNumbersArray);
+    numbersN13(word, saveInNumbersArray);
+    numbersN14(word, saveInNumbersArray);
   }
 
-  function applyNumbersToNN2(word) {
-    numbersN1(word);
-    numbersN2(word);
+  function applyNumbersToN2(word, saveInNumbersArray = true) {
+    numbersN1(word, saveInNumbersArray);
+    numbersN2(word, saveInNumbersArray);
   }
 
-  function applyNumbersToN8(word) {
-    numbersN1(word);
-    numbersN2(word);
-    numbersN3(word);
-    numbersN4(word);
-    numbersN5(word);
-    numbersN6(word);
-    numbersN7(word);
-    numbersN8(word);
+  function applyNumbersToN4(word, saveInNumbersArray = true) {
+    numbersN1(word, saveInNumbersArray);
+    numbersN2(word, saveInNumbersArray);
+    numbersN3(word, saveInNumbersArray);
+    numbersN4(word, saveInNumbersArray);
+  }
+
+  function applyNumbersToN6(word, saveInNumbersArray = true) {
+    numbersN1(word, saveInNumbersArray);
+    numbersN2(word, saveInNumbersArray);
+    numbersN3(word, saveInNumbersArray);
+    numbersN4(word, saveInNumbersArray);
+    numbersN5(word, saveInNumbersArray);
+    numbersN6(word, saveInNumbersArray);
   }
 
   function applyRemoveLetters(word) {
@@ -355,10 +364,10 @@ $(document).ready(function () {
     removeLettersN2(word);
   }
 
-  function applyAllDates(word) {
-    dateN1(word);
-    dateN2(word);
-    dateN3(word);
+  function applyAllDates(word, saveInDatesArray = true) {
+    dateN1(word, saveInDatesArray);
+    dateN2(word, saveInDatesArray);
+    dateN3(word, saveInDatesArray);
   }
 
   // input: test | output: Test, tEst, teSt, tesT
@@ -372,7 +381,7 @@ $(document).ready(function () {
         letter.toString().toUpperCase() +
         word.slice(index + 1);
       wordlist.push(newWord);
-      wordlist_IterationN2.push(newWord);
+      wordlist_lowerAndUpperCaseWords.push(newWord);
     });
   }
 
@@ -384,7 +393,7 @@ $(document).ready(function () {
     splitWord.forEach((letter, index) => {
       newWord = word.slice(0, index + 1).toUpperCase() + word.slice(index + 1);
       wordlist.push(newWord);
-      wordlist_IterationN2.push(newWord);
+      wordlist_lowerAndUpperCaseWords.push(newWord);
     });
   }
 
@@ -398,7 +407,7 @@ $(document).ready(function () {
         word.slice(0, word.length - (index + 1)) +
         word.slice(word.length - (index + 1)).toUpperCase();
       wordlist.push(newWord);
-      wordlist_IterationN2.push(newWord);
+      wordlist_lowerAndUpperCaseWords.push(newWord);
     });
   }
 
@@ -471,7 +480,7 @@ $(document).ready(function () {
         letter.toString().toLowerCase() +
         word.slice(index + 1);
       wordlist.push(newWord);
-      wordlist_IterationN2.push(newWord);
+      wordlist_lowerAndUpperCaseWords.push(newWord);
     });
   }
 
@@ -483,7 +492,7 @@ $(document).ready(function () {
     splitWord.forEach((letter, index) => {
       newWord = word.slice(0, index + 1).toLowerCase() + word.slice(index + 1);
       wordlist.push(newWord);
-      wordlist_IterationN2.push(newWord);
+      wordlist_lowerAndUpperCaseWords.push(newWord);
     });
   }
 
@@ -497,7 +506,7 @@ $(document).ready(function () {
         word.slice(0, word.length - (index + 1)) +
         word.slice(word.length - (index + 1)).toLowerCase();
       wordlist.push(newWord);
-      wordlist_IterationN2.push(newWord);
+      wordlist_lowerAndUpperCaseWords.push(newWord);
     });
   }
 
@@ -600,71 +609,83 @@ $(document).ready(function () {
   }
 
   //input: test | output: test0, test1, test2, test3, test4...
-  function numbersN1(word) {
+  function numbersN1(word, saveInNumbersArray) {
     let newWord;
     for (let i = 0; i < 10; i++) {
       newWord = word + i;
       wordlist.push(newWord);
-      wordlist_IterationN3.push(newWord);
+      if (saveInNumbersArray) {
+        wordlist_wordsWithNumbers.push(newWord);
+      }
     }
   }
 
   //input: test | output: 0test, 1test, 2test, 3test, 4test...
-  function numbersN2(word) {
+  function numbersN2(word, saveInNumbersArray) {
     let newWord;
     for (let i = 0; i < 10; i++) {
       newWord = i + word;
       wordlist.push(newWord);
-      wordlist_IterationN3.push(newWord);
+      if (saveInNumbersArray) {
+        wordlist_wordsWithNumbers.push(newWord);
+      }
     }
   }
 
   //input: test | output: test00, test01, test02, test03...test10, test11, test12, test13...test20, test21, test22, test23...
-  function numbersN3(word) {
+  function numbersN3(word, saveInNumbersArray) {
     let newWord;
     for (let i = 0; i < 10; i++) {
       for (let j = 0; j < 10; j++) {
         newWord = word + i.toString() + j.toString();
         wordlist.push(newWord);
-        wordlist_IterationN3.push(newWord);
+        if (saveInNumbersArray) {
+          wordlist_wordsWithNumbers.push(newWord);
+        }
       }
     }
   }
 
   //input: test | output: 00test, 01test, 02test, 03test...10test, 11test, 12test, 13test...20test, 21test, 22test, 23test...
-  function numbersN4(word) {
+  function numbersN4(word, saveInNumbersArray) {
     let newWord;
     for (let i = 0; i < 10; i++) {
       for (let j = 0; j < 10; j++) {
         newWord = i.toString() + j.toString() + word;
         wordlist.push(newWord);
-        wordlist_IterationN3.push(newWord);
+        if (saveInNumbersArray) {
+          wordlist_wordsWithNumbers.push(newWord);
+        }
       }
     }
   }
 
   //input: test | output: test012, test123, test234, test345
-  function numbersN5(word) {
+  function numbersN5(word, saveInNumbersArray) {
     let newWord;
     for (let i = 0; i < 8; i++) {
       newWord = word + i.toString() + (i + 1).toString() + (i + 2).toString();
       wordlist.push(newWord);
-      wordlist_IterationN3.push(newWord);
+      if (saveInNumbersArray) {
+        wordlist_wordsWithNumbers.push(newWord);
+      }
     }
   }
 
   //input: test | output: 012test, 123test, 234test, 345test
-  function numbersN6(word) {
+  function numbersN6(word, saveInNumbersArray) {
     let newWord;
     for (let i = 0; i < 8; i++) {
       newWord = i.toString() + (i + 1).toString() + (i + 2).toString() + word;
       wordlist.push(newWord);
-      wordlist_IterationN3.push(newWord);
+      if (saveInNumbersArray) {
+        wordlist_wordsWithNumbers.push(newWord);
+      }
     }
   }
 
   //input: test | output: test000, test001, test002, test003
-  function numbersN7(word) {
+  function numbersN7(word, saveInNumbersArray) {
     let newWord;
     for (let i = 0; i < 10; i++) {
       newWord = word + '00' + i;
@@ -673,7 +694,7 @@ $(document).ready(function () {
   }
 
   //input: test | output: 000test, 001test, 002test, 003test
-  function numbersN8(word) {
+  function numbersN8(word, saveInNumbersArray) {
     let newWord;
     for (let i = 0; i < 10; i++) {
       newWord = '00' + i + word;
@@ -682,7 +703,7 @@ $(document).ready(function () {
   }
 
   //input: test | output: 0test0, 1test1, 2test2, 3test3
-  function numbersN9(word) {
+  function numbersN9(word, saveInNumbersArray) {
     let newWord;
     for (let i = 0; i < 10; i++) {
       newWord = i + word + i;
@@ -691,7 +712,7 @@ $(document).ready(function () {
   }
 
   //input: test | output: 0test0, 0test1, 0test2...1test0, 1test1, 1test2...2test0, 2test1, 2test2...
-  function numbersN10(word) {
+  function numbersN10(word, saveInNumbersArray) {
     let newWord;
     for (let i = 0; i < 10; i++) {
       for (let j = 0; j < 10; j++) {
@@ -702,7 +723,7 @@ $(document).ready(function () {
   }
 
   //input: test | output: 00test00, 01test01, 02test02, 03test03, 04test04...
-  function numbersN11(word) {
+  function numbersN11(word, saveInNumbersArray) {
     let newWord;
     for (let i = 0; i < 10; i++) {
       newWord = '0' + i + word + '0' + i;
@@ -711,7 +732,7 @@ $(document).ready(function () {
   }
 
   //input: test | output: 00test0, 01test1, 02test2, 03test3
-  function numbersN12(word) {
+  function numbersN12(word, saveInNumbersArray) {
     let newWord;
     for (let i = 0; i < 10; i++) {
       newWord = '0' + i + word + i;
@@ -720,7 +741,7 @@ $(document).ready(function () {
   }
 
   //input: test | output: 0test00, 1test01, 2test02, 3test03
-  function numbersN13(word) {
+  function numbersN13(word, saveInNumbersArray) {
     let newWord;
     for (let i = 0; i < 10; i++) {
       newWord = i + word + '0' + i;
@@ -729,7 +750,7 @@ $(document).ready(function () {
   }
 
   //input: test | output: 00test00, 00test01, 00test02...01test00, 01test01, 01test02...02test00, 02test01, 02test02...03test00, 03test01, 03test02...
-  function numbersN14(word) {
+  function numbersN14(word, saveInNumbersArray) {
     let newWord;
     for (let i = 0; i < 10; i++) {
       for (let j = 0; j < 10; j++) {
@@ -740,22 +761,26 @@ $(document).ready(function () {
   }
 
   //input: test | output: test!, test", test#, test$, test%...
-  function symbolsN1(word) {
+  function symbolsN1(word, saveInSymbolsArray) {
     let newWord;
     for (let i = 0; i < symbols.length; i++) {
       newWord = word + symbols[i];
       wordlist.push(newWord);
-      wordlist_IterationN4.push(newWord);
+      if (saveInSymbolsArray) {
+        wordlist_wordsWithSymbols.push(newWord);
+      }
     }
   }
 
   //input: test | output: !test, "test, #test, $test, %test...
-  function symbolsN2(word) {
+  function symbolsN2(word, saveInSymbolsArray) {
     let newWord;
     for (let i = 0; i < symbols.length; i++) {
       newWord = symbols[i] + word;
       wordlist.push(newWord);
-      wordlist_IterationN4.push(newWord);
+      if (saveInSymbolsArray) {
+        wordlist_wordsWithSymbols.push(newWord);
+      }
     }
   }
 
@@ -812,7 +837,7 @@ $(document).ready(function () {
   }
 
   //format = [word] + [date]
-  function dateN1(word) {
+  function dateN1(word, saveInDatesArray) {
     let newWord;
     let date = $('#date').val();
 
@@ -828,63 +853,105 @@ $(document).ready(function () {
       //input:test | output: test1999
       newWord = word + yearFormats[i];
       wordlist.push(newWord);
+      if (saveInDatesArray) {
+        wordlist_wordsWithDates.push(newWord);
+      }
 
       //input:test | output: test12
       newWord = word + monthFormats[i];
       wordlist.push(newWord);
+      if (saveInDatesArray) {
+        wordlist_wordsWithDates.push(newWord);
+      }
 
       //input:test | output: test03
       newWord = word + dayFormats[i];
       wordlist.push(newWord);
+      if (saveInDatesArray) {
+        wordlist_wordsWithDates.push(newWord);
+      }
 
       //input:test | output: test28122023
       newWord = word + dayFormats[i] + monthFormats[i] + yearFormats[i];
       wordlist.push(newWord);
+      if (saveInDatesArray) {
+        wordlist_wordsWithDates.push(newWord);
+      }
 
       //input:test | output: test20232812
       newWord = word + yearFormats[i] + dayFormats[i] + monthFormats[i];
       wordlist.push(newWord);
+      if (saveInDatesArray) {
+        wordlist_wordsWithDates.push(newWord);
+      }
 
       //input:test | output: test20231228
       newWord = word + yearFormats[i] + monthFormats[i] + dayFormats[i];
       wordlist.push(newWord);
+      if (saveInDatesArray) {
+        wordlist_wordsWithDates.push(newWord);
+      }
 
       //input:test | output: test12282023
       newWord = word + monthFormats[i] + dayFormats[i] + yearFormats[i];
       wordlist.push(newWord);
+      if (saveInDatesArray) {
+        wordlist_wordsWithDates.push(newWord);
+      }
 
       //input:test | output: test12202328
       newWord = word + monthFormats[i] + yearFormats[i] + dayFormats[i];
       wordlist.push(newWord);
+      if (saveInDatesArray) {
+        wordlist_wordsWithDates.push(newWord);
+      }
 
       //input:test | output: test2812
       newWord = word + dayFormats[i] + monthFormats[i];
       wordlist.push(newWord);
+      if (saveInDatesArray) {
+        wordlist_wordsWithDates.push(newWord);
+      }
 
       //input:test | output: test1228
       newWord = word + monthFormats[i] + dayFormats[i];
       wordlist.push(newWord);
+      if (saveInDatesArray) {
+        wordlist_wordsWithDates.push(newWord);
+      }
 
       //input:test | output: test122023
       newWord = word + monthFormats[i] + yearFormats[i];
       wordlist.push(newWord);
+      if (saveInDatesArray) {
+        wordlist_wordsWithDates.push(newWord);
+      }
 
       //input:test | output: test202312
       newWord = word + yearFormats[i] + monthFormats[i];
       wordlist.push(newWord);
+      if (saveInDatesArray) {
+        wordlist_wordsWithDates.push(newWord);
+      }
 
       //input:test | output: test282023
       newWord = word + dayFormats[i] + yearFormats[i];
       wordlist.push(newWord);
+      if (saveInDatesArray) {
+        wordlist_wordsWithDates.push(newWord);
+      }
 
       //input:test | output: test202328
       newWord = word + yearFormats[i] + dayFormats[i];
       wordlist.push(newWord);
+      if (saveInDatesArray) {
+        wordlist_wordsWithDates.push(newWord);
+      }
     }
   }
 
   //format = [date] + [word]
-  function dateN2(word) {
+  function dateN2(word, saveInDatesArray) {
     let newWord;
     let date = $('#date').val();
 
@@ -900,58 +967,98 @@ $(document).ready(function () {
       //input:test | output: 1999test
       newWord = yearFormats[i] + word;
       wordlist.push(newWord);
+      if (saveInDatesArray) {
+        wordlist_wordsWithDates.push(newWord);
+      }
 
       //input:test | output: 12test
       newWord = monthFormats[i] + word;
       wordlist.push(newWord);
-
+      if (saveInDatesArray) {
+        wordlist_wordsWithDates.push(newWord);
+      }
       //input:test | output: 03test
       newWord = dayFormats[i] + word;
       wordlist.push(newWord);
-
+      if (saveInDatesArray) {
+        wordlist_wordsWithDates.push(newWord);
+      }
       //input:test | output: 28122023test
       newWord = dayFormats[i] + monthFormats[i] + yearFormats[i] + word;
       wordlist.push(newWord);
+      if (saveInDatesArray) {
+        wordlist_wordsWithDates.push(newWord);
+      }
 
       //input:test | output: 20232812test
       newWord = yearFormats[i] + dayFormats[i] + monthFormats[i] + word;
       wordlist.push(newWord);
+      if (saveInDatesArray) {
+        wordlist_wordsWithDates.push(newWord);
+      }
 
       //input:test | output: 20231228test
       newWord = yearFormats[i] + monthFormats[i] + dayFormats[i] + word;
       wordlist.push(newWord);
+      if (saveInDatesArray) {
+        wordlist_wordsWithDates.push(newWord);
+      }
 
       //input:test | output: 12282023test
       newWord = monthFormats[i] + dayFormats[i] + yearFormats[i] + word;
       wordlist.push(newWord);
+      if (saveInDatesArray) {
+        wordlist_wordsWithDates.push(newWord);
+      }
 
       //input:test | output: 12202328test
       newWord = monthFormats[i] + yearFormats[i] + dayFormats[i] + word;
       wordlist.push(newWord);
+      if (saveInDatesArray) {
+        wordlist_wordsWithDates.push(newWord);
+      }
 
       //input:test | output: 2812test
       newWord = dayFormats[i] + monthFormats[i] + word;
       wordlist.push(newWord);
+      if (saveInDatesArray) {
+        wordlist_wordsWithDates.push(newWord);
+      }
 
       //input:test | output: 1228test
       newWord = monthFormats[i] + dayFormats[i] + word;
       wordlist.push(newWord);
+      if (saveInDatesArray) {
+        wordlist_wordsWithDates.push(newWord);
+      }
 
       //input:test | output: 122023test
       newWord = monthFormats[i] + yearFormats[i] + word;
       wordlist.push(newWord);
+      if (saveInDatesArray) {
+        wordlist_wordsWithDates.push(newWord);
+      }
 
       //input:test | output: 202312test
       newWord = yearFormats[i] + monthFormats[i] + word;
       wordlist.push(newWord);
+      if (saveInDatesArray) {
+        wordlist_wordsWithDates.push(newWord);
+      }
 
       //input:test | output: 282023test
       newWord = dayFormats[i] + yearFormats[i] + word;
       wordlist.push(newWord);
+      if (saveInDatesArray) {
+        wordlist_wordsWithDates.push(newWord);
+      }
 
       //input:test | output: 202328test
       newWord = yearFormats[i] + dayFormats[i] + word;
       wordlist.push(newWord);
+      if (saveInDatesArray) {
+        wordlist_wordsWithDates.push(newWord);
+      }
     }
   }
 
@@ -1053,6 +1160,13 @@ $(document).ready(function () {
       newWord = dayFormats[i] + word + monthFormats[i] + yearFormats[i];
       wordlist.push(newWord);
     }
+  }
+
+  function firstLetterCapitalizedAndTheOriginalWord(word) {
+    let newWord;
+    newWord = word.charAt(0).toUpperCase() + word.slice(1);
+    wordlist_basicWords.push(newWord);
+    wordlist_basicWords.push(word);
   }
 
   function showOutput() {
