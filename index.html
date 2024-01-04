@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script
+      src="https://code.jquery.com/jquery-3.7.1.js"
+      integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4="
+      crossorigin="anonymous"
+    ></script>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
+      crossorigin="anonymous"
+    />
+    <script src="script.js"></script>
+    <title>Wordlist Generator</title>
+    <style>
+      body {
+        margin: 20px;
+        font-family: Georgia, Arial, sans-serif, Verdana, 'Trebuchet MS',
+          'Times New Roman', serif;
+        font-size: 1rem;
+        font-weight: 400;
+        line-height: 1.5;
+        color: #212529;
+        text-align: left;
+        background-color: #f0f0f0;
+      }
+      textarea {
+        resize: none;
+        width: 25%;
+      }
+      input[name='word'] {
+        width: 25%;
+      }
+      input[name='date'] {
+        width: 10%;
+        text-align: center;
+      }
+      label {
+        margin-right: 10px;
+      }
+      ::placeholder {
+        font-style: italic;
+      }
+      h2 {
+        color: rgb(82, 82, 82);
+      }
+      .spaced-letters {
+        letter-spacing: 5px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="title text-center mt-4">
+      <h1 class="spaced-letters fw-bold">Wordlist Generator</h1>
+      <p>
+        By
+        <a href="https://www.linkedin.com/in/juan-tomas-ortiz/"
+          ><i>Juan Tomás Ortiz</i></a
+        >
+      </p>
+    </div>
+
+    <div class="instructions mt-4">
+      <h2 class="fw-bold">Instructions</h2>
+      <ul>
+        <li>Only one word per input.</li>
+        <li>
+          A single word is required to generate a word list; the others are
+          optional.
+        </li>
+        <li>
+          The number of results depends on the quantity and length of the words,
+          as well as the selected options.
+        </li>
+      </ul>
+    </div>
+
+    <div class="input mt-4">
+      <form id="generateWordlist" autocomplete="off">
+        <h2 class="fw-bold">Input</h2>
+
+        <div class="mb-3 d-flex align-items-center">
+          <label for="word1" class="form-label">Word #1</label>
+          <input
+            type="text"
+            id="word1"
+            class="form-control"
+            name="word"
+            minlength="1"
+            maxlength="13"
+            placeholder="E.g. First Name, Last Name, Username..."
+          />
+        </div>
+
+        <div class="mb-3 d-flex align-items-center">
+          <label for="word2" class="form-label">Word #2</label>
+          <input
+            type="text"
+            id="word2"
+            class="form-control"
+            name="word"
+            minlength="1"
+            maxlength="13"
+            placeholder="E.g. Company Name, Job Title, Career, Industry..."
+          />
+        </div>
+
+        <div class="mb-3 d-flex align-items-center">
+          <label for="word3" class="form-label">Word #3</label>
+          <input
+            type="text"
+            id="word3"
+            name="word"
+            class="form-control"
+            minlength="1"
+            maxlength="13"
+            placeholder="E.g. Country, State, Street Name..."
+          />
+        </div>
+
+        <div class="mb-3 d-flex align-items-center">
+          <label for="date" class="form-label"
+            >Date (<i>E.g. birthdate, anniversary...</i>)</label
+          >
+          <input type="date" class="form-control" id="date" name="date" />
+        </div>
+
+        <div class="mb-3">
+          <input
+            type="checkbox"
+            id="numbers"
+            name="numbers"
+            value="numbers"
+            checked
+          />
+          <label for="numbers">Include numbers (<i>0-9</i>)</label><br />
+
+          <input
+            type="checkbox"
+            id="symbols"
+            name="symbols"
+            value="symbols"
+            checked
+          />
+          <label for="symbols"
+            >Include symbols (<i>!@#$%^&*()_+-={}[]|\:;"'<>,.?/</i>)</label
+          >
+        </div>
+
+        <div class="buttons mb-3">
+          <input
+            type="submit"
+            class="btn btn-primary"
+            value="Generate Wordlist"
+          />
+          <button type="button" class="btn btn-secondary" id="clearInputs">
+            Clear inputs
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <div class="output mt-4">
+      <div
+        class="spinner-border text-primary"
+        id="spinner"
+        role="status"
+        style="display: none"
+      >
+        <span class="visually-hidden">Loading...</span>
+      </div>
+      <h2 class="fw-bold">Output</h2>
+      <div class="mt-3">
+        <p id="results"></p>
+      </div>
+      <div class="mt-3">
+        <textarea id="output" rows="28" disabled></textarea>
+      </div>
+      <div class="mt-3">
+        <p id="fileSize"></p>
+      </div>
+      <div class="mt-3">
+        <button id="download" class="btn btn-success" disabled>Download</button>
+      </div>
+    </div>
+
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+      crossorigin="anonymous"
+    ></script>
+  </body>
+</html>
