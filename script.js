@@ -39,7 +39,6 @@ $(document).ready(function () {
   var wordlist_wordsWithSymbols = [];
   var wordlist_concatenationOfTwoWords = [];
   var wordlist_concatenationOfThreeWords = [];
-  var wordlist_allConcatenations = [];
   var wordlist_basicWords = [];
   var wordlist_wordsWithDates = [];
   var includeNumbers = true;
@@ -93,7 +92,6 @@ $(document).ready(function () {
     wordlist_wordsWithSymbols = [];
     wordlist_concatenationOfTwoWords = [];
     wordlist_concatenationOfThreeWords = [];
-    wordlist_allConcatenations = [];
     wordlist_basicWords = [];
     wordlist_wordsWithDates = [];
   }
@@ -118,28 +116,28 @@ $(document).ready(function () {
 
     if (words.length > 0) {
       if (includeNumbers) {
-        words.forEach((word, index) => {
+        words.forEach((word) => {
           applyAllLowerAndUpperCase(word);
           applyRemoveLetters(word);
           applyAllNumbers(word);
-          firstLetterCapitalizedAndTheOriginalWord(word);
+          onlyBasicWords(word);
         });
       } else {
-        words.forEach((word, index) => {
+        words.forEach((word) => {
           applyAllLowerAndUpperCase(word);
           applyRemoveLetters(word);
-          firstLetterCapitalizedAndTheOriginalWord(word);
+          onlyBasicWords(word);
         });
       }
 
       if (includeDate) {
-        words.forEach((word, index) => {
+        words.forEach((word) => {
           applyAllDates(word);
         });
       }
 
       if (includeSymbols) {
-        words.forEach((word, index) => {
+        words.forEach((word) => {
           applyAllSymbols(word);
         });
       }
@@ -152,45 +150,47 @@ $(document).ready(function () {
       );
 
       if (includeNumbers) {
-        wordlist_lowerAndUpperCaseWords.forEach((word, index) => {
+        wordlist_lowerAndUpperCaseWords.forEach((word) => {
           applyAllNumbers(word);
         });
       }
 
       if (includeSymbols) {
-        wordlist_lowerAndUpperCaseWords.forEach((word, index) => {
+        wordlist_lowerAndUpperCaseWords.forEach((word) => {
           applyAllSymbols(word);
         });
       }
 
       if (includeDate) {
-        wordlist_lowerAndUpperCaseWords.forEach((word, index) => {
+        wordlist_lowerAndUpperCaseWords.forEach((word) => {
           applyAllDates(word);
         });
 
-        wordlist_wordsWithNumbers.forEach((word, index) => {
+        wordlist_wordsWithNumbers.forEach((word) => {
           applyAllDates(word, false);
         });
 
-        wordlist_wordsWithSymbols.forEach((word, index) => {
+        wordlist_wordsWithSymbols.forEach((word) => {
           applyAllDates(word, false);
         });
 
-        wordlist_wordsWithDates.forEach((word, index) => {
+        wordlist_wordsWithDates.forEach((word) => {
           applySymbolsN1_N2(word, false);
-          applyNumbersToN6(word, false);
+          replaceLettersBySymbols(word);
+          applyNumbersToN8(word, false);
         });
       }
 
       if (includeNumbers) {
-        wordlist_wordsWithSymbols.forEach((word, index) => {
-          applyNumbersToN6(word, false);
+        wordlist_wordsWithSymbols.forEach((word) => {
+          applyNumbersToN8(word, false);
         });
       }
 
       if (includeSymbols) {
-        wordlist_wordsWithNumbers.forEach((word, index) => {
+        wordlist_wordsWithNumbers.forEach((word) => {
           applySymbolsN1_N2(word, false);
+          replaceLettersBySymbols(word);
         });
       }
     } else if (words.length > 1) {
@@ -212,6 +212,44 @@ $(document).ready(function () {
           });
         });
 
+        if (includeNumbers) {
+          wordlist_concatenationOfTwoWords.forEach((word) => {
+            applyAllNumbers(word);
+          });
+        }
+
+        if (includeSymbols) {
+          wordlist_concatenationOfTwoWords.forEach((word) => {
+            applySymbolsN1_N2_N5(word);
+            replaceLettersBySymbols(word);
+          });
+        }
+
+        if (includeDate) {
+          wordlist_concatenationOfTwoWords.forEach((word) => {
+            applyAllDates(word);
+          });
+
+          wordlist_wordsWithDates.forEach((word) => {
+            applySymbolsN1_N2(word, false);
+            replaceLettersBySymbols(word);
+            applyNumbersToN4(word, false);
+          });
+        }
+
+        if (includeNumbers) {
+          wordlist_wordsWithSymbols.forEach((word) => {
+            applyNumbersToN6(word, false);
+          });
+        }
+
+        if (includeSymbols) {
+          wordlist_wordsWithNumbers.forEach((word) => {
+            applySymbolsN1_N2(word, false);
+            replaceLettersBySymbols(word);
+          });
+        }
+
         //word1: Hola, word2: Test, word3: Tecnologia | output: HolaTestTecnologia
       } else if (words.length === 3) {
         wordlist_lowerAndUpperCaseWords.forEach((word1) => {
@@ -231,42 +269,38 @@ $(document).ready(function () {
             });
           });
         });
-      }
 
-      // Se coloca en un array todas las concatenaciones realizadas previamente
-      wordlist_allConcatenations = wordlist_concatenationOfTwoWords.concat(
-        wordlist_concatenationOfThreeWords
-      );
+        if (includeNumbers) {
+          wordlist_concatenationOfThreeWords.forEach((word) => {
+            applyAllNumbers(word);
+          });
+        }
 
-      if (includeNumbers) {
-        wordlist_allConcatenations.forEach((word, index) => {
-          applyAllNumbers(word);
-        });
-      }
+        if (includeSymbols) {
+          wordlist_concatenationOfThreeWords.forEach((word) => {
+            applySymbolsN1_N2(word);
+            replaceLettersBySymbols(word);
+          });
+        }
 
-      if (includeSymbols) {
-        wordlist_allConcatenations.forEach((word, index) => {
-          applySymbolsN1_N2(word);
-          replaceLettersBySymbols(word);
-        });
-      }
+        if (includeDate) {
+          wordlist_concatenationOfThreeWords.forEach((word) => {
+            applyAllDates(word);
+          });
+        }
 
-      if (includeDate) {
-        wordlist_allConcatenations.forEach((word, index) => {
-          applyAllDates(word);
-        });
-      }
+        if (includeNumbers) {
+          wordlist_wordsWithSymbols.forEach((word) => {
+            applyNumbersToN2(word, false);
+          });
+        }
 
-      if (includeNumbers) {
-        wordlist_wordsWithSymbols.forEach((word, index) => {
-          applyNumbersToN2(word, false);
-        });
-      }
-
-      if (includeSymbols) {
-        wordlist_wordsWithNumbers.forEach((word, index) => {
-          applySymbolsN1_N2(word, false);
-        });
+        if (includeSymbols) {
+          wordlist_wordsWithNumbers.forEach((word) => {
+            applySymbolsN1_N2(word, false);
+            replaceLettersBySymbols(word);
+          });
+        }
       }
     }
 
@@ -357,6 +391,17 @@ $(document).ready(function () {
     numbersN4(word, saveInNumbersArray);
     numbersN5(word, saveInNumbersArray);
     numbersN6(word, saveInNumbersArray);
+  }
+
+  function applyNumbersToN8(word, saveInNumbersArray = true) {
+    numbersN1(word, saveInNumbersArray);
+    numbersN2(word, saveInNumbersArray);
+    numbersN3(word, saveInNumbersArray);
+    numbersN4(word, saveInNumbersArray);
+    numbersN5(word, saveInNumbersArray);
+    numbersN6(word, saveInNumbersArray);
+    numbersN7(word, saveInNumbersArray);
+    numbersN8(word, saveInNumbersArray);
   }
 
   function applyRemoveLetters(word) {
@@ -1162,10 +1207,17 @@ $(document).ready(function () {
     }
   }
 
-  function firstLetterCapitalizedAndTheOriginalWord(word) {
+  //input: test | output: Test, test, TEST
+  function onlyBasicWords(word) {
     let newWord;
-    newWord = word.charAt(0).toUpperCase() + word.slice(1);
+    newWord = word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
     wordlist_basicWords.push(newWord);
+    newWord = word.toLowerCase();
+    wordlist_basicWords.push(newWord);
+    if (words.length < 3) {
+      newWord = word.toUpperCase();
+      wordlist_basicWords.push(newWord);
+    }
     wordlist_basicWords.push(word);
   }
 
