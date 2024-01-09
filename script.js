@@ -48,6 +48,8 @@ $(document).ready(function () {
   $('#generateWordlist').submit(function (ev) {
     ev.preventDefault();
     clearVariables();
+    clearFileSize();
+    disableDownloadButton();
 
     includeNumbers = $('#numbers').prop('checked');
     includeSymbols = $('#symbols').prop('checked');
@@ -55,12 +57,18 @@ $(document).ready(function () {
 
     $('#spinner').show();
 
+    generateWordlist();
     setTimeout(function () {
-      generateWordlist();
-      enableDownloadButton();
-      showFileSize();
-      if ($('#output').val()) {
+      showOutput();
+      if (finalList.length === 0) {
+        $('#output').val('');
         $('#spinner').hide();
+      } else {
+        showFileSize();
+        enableDownloadButton();
+        if ($('#output').val()) {
+          $('#spinner').hide();
+        }
       }
     }, 100);
   });
@@ -80,6 +88,7 @@ $(document).ready(function () {
   }
 
   function disableDownloadButton() {
+    $('#download').off('click');
     $('#download').prop('disabled', true);
   }
 
@@ -111,6 +120,19 @@ $(document).ready(function () {
       let word = $(this).val();
       if (word.trim() !== '') {
         words.push(word);
+      }
+    });
+
+    $('#download').on('click', function () {
+      if (finalList.length > 0) {
+        let blob = new Blob([finalList], { type: 'text/plain' });
+        let link = document.createElement('a');
+        link.href = window.URL.createObjectURL(blob);
+        link.download = 'wordlist.txt';
+
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
       }
     });
 
@@ -166,24 +188,31 @@ $(document).ready(function () {
           applyAllDates(word);
         });
 
-        wordlist_wordsWithNumbers.forEach((word) => {
-          applyAllDates(word, false);
-        });
+        if (includeSymbols) {
+          wordlist_wordsWithDates.forEach((word) => {
+            applySymbolsN1_N2(word, false);
+            replaceLettersBySymbols(word);
+          });
 
-        wordlist_wordsWithSymbols.forEach((word) => {
-          applyAllDates(word, false);
-        });
+          wordlist_wordsWithSymbols.forEach((word) => {
+            applyAllDates(word, false);
+          });
+        }
 
-        wordlist_wordsWithDates.forEach((word) => {
-          applySymbolsN1_N2(word, false);
-          replaceLettersBySymbols(word);
-          applyNumbersToN8(word, false);
-        });
+        if (includeNumbers) {
+          wordlist_wordsWithDates.forEach((word) => {
+            applyAllNumbers(word, false);
+          });
+
+          wordlist_wordsWithNumbers.forEach((word) => {
+            applyAllDates(word, false);
+          });
+        }
       }
 
       if (includeNumbers) {
         wordlist_wordsWithSymbols.forEach((word) => {
-          applyNumbersToN8(word, false);
+          applyAllNumbers(word, false);
         });
       }
 
@@ -200,15 +229,21 @@ $(document).ready(function () {
       if (words.length === 2) {
         wordlist_lowerAndUpperCaseWords.forEach((word1) => {
           wordlist_lowerAndUpperCaseWords.forEach((word2) => {
-            newWord = word1 + word2;
-            wordlist.push(newWord);
+            //Se evita que se agregue una cadena que contenga palabras repetidas
+            if (word1.toLowerCase() !== word2.toLowerCase()) {
+              newWord = word1 + word2;
+              wordlist.push(newWord);
+            }
           });
         });
 
         wordlist_basicWords.forEach((word1) => {
           wordlist_basicWords.forEach((word2) => {
-            newWord = word1 + word2;
-            wordlist_concatenationOfTwoWords.push(newWord);
+            //Se evita que se agregue una cadena que contenga palabras repetidas
+            if (word1.toLowerCase() !== word2.toLowerCase()) {
+              newWord = word1 + word2;
+              wordlist_concatenationOfTwoWords.push(newWord);
+            }
           });
         });
 
@@ -230,16 +265,31 @@ $(document).ready(function () {
             applyAllDates(word);
           });
 
-          wordlist_wordsWithDates.forEach((word) => {
-            applySymbolsN1_N2(word, false);
-            replaceLettersBySymbols(word);
-            applyNumbersToN4(word, false);
-          });
+          if (includeSymbols) {
+            wordlist_wordsWithDates.forEach((word) => {
+              applySymbolsN1_N2_N5(word, false);
+              replaceLettersBySymbols(word);
+            });
+
+            wordlist_wordsWithSymbols.forEach((word) => {
+              applyAllDates(word, false);
+            });
+          }
+
+          if (includeNumbers) {
+            wordlist_wordsWithDates.forEach((word) => {
+              applyNumbersToN8(word, false);
+            });
+
+            wordlist_wordsWithNumbers.forEach((word) => {
+              applyAllDates(word, false);
+            });
+          }
         }
 
         if (includeNumbers) {
           wordlist_wordsWithSymbols.forEach((word) => {
-            applyNumbersToN6(word, false);
+            applyNumbersToN8(word, false);
           });
         }
 
@@ -255,8 +305,16 @@ $(document).ready(function () {
         wordlist_lowerAndUpperCaseWords.forEach((word1) => {
           wordlist_lowerAndUpperCaseWords.forEach((word2) => {
             wordlist_lowerAndUpperCaseWords.forEach((word3) => {
-              newWord = word1 + word2;
-              wordlist.push(newWord + word3);
+              //Se evita que se agregue una cadena que contenga palabras repetidas
+              let uniqueWords = new Set([
+                word1.toLowerCase(),
+                word2.toLowerCase(),
+                word3.toLowerCase(),
+              ]);
+              if (uniqueWords.size === 3) {
+                newWord = word1 + word2;
+                wordlist.push(newWord + word3);
+              }
             });
           });
         });
@@ -264,8 +322,16 @@ $(document).ready(function () {
         wordlist_basicWords.forEach((word1) => {
           wordlist_basicWords.forEach((word2) => {
             wordlist_basicWords.forEach((word3) => {
-              newWord = word1 + word2;
-              wordlist_concatenationOfThreeWords.push(newWord + word3);
+              //Se evita que se agregue una cadena que contenga palabras repetidas
+              let uniqueWords = new Set([
+                word1.toLowerCase(),
+                word2.toLowerCase(),
+                word3.toLowerCase(),
+              ]);
+              if (uniqueWords.size === 3) {
+                newWord = word1 + word2;
+                wordlist_concatenationOfThreeWords.push(newWord + word3);
+              }
             });
           });
         });
@@ -287,11 +353,32 @@ $(document).ready(function () {
           wordlist_concatenationOfThreeWords.forEach((word) => {
             applyAllDates(word);
           });
+
+          if (includeSymbols) {
+            wordlist_wordsWithDates.forEach((word) => {
+              applySymbolsN1_N2(word, false);
+              replaceLettersBySymbols(word);
+            });
+
+            wordlist_wordsWithSymbols.forEach((word) => {
+              applyAllDates(word, false);
+            });
+          }
+
+          if (includeNumbers) {
+            wordlist_wordsWithDates.forEach((word) => {
+              applyNumbersToN4(word, false);
+            });
+
+            wordlist_wordsWithNumbers.forEach((word) => {
+              applyAllDates(word, false);
+            });
+          }
         }
 
         if (includeNumbers) {
           wordlist_wordsWithSymbols.forEach((word) => {
-            applyNumbersToN2(word, false);
+            applyNumbersToN6(word, false);
           });
         }
 
@@ -303,21 +390,7 @@ $(document).ready(function () {
         }
       }
     }
-
-    showOutput();
   }
-
-  $('#download').click(function () {
-    let blob = new Blob([finalList], { type: 'text/plain' });
-
-    var link = document.createElement('a');
-    link.href = window.URL.createObjectURL(blob);
-    link.download = 'wordlist.txt';
-
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-  });
 
   function applyAllSymbols(word, saveInSymbolsArray = true) {
     symbolsN1(word, saveInSymbolsArray);
@@ -370,11 +443,6 @@ $(document).ready(function () {
     numbersN12(word, saveInNumbersArray);
     numbersN13(word, saveInNumbersArray);
     numbersN14(word, saveInNumbersArray);
-  }
-
-  function applyNumbersToN2(word, saveInNumbersArray = true) {
-    numbersN1(word, saveInNumbersArray);
-    numbersN2(word, saveInNumbersArray);
   }
 
   function applyNumbersToN4(word, saveInNumbersArray = true) {
@@ -890,10 +958,6 @@ $(document).ready(function () {
     let monthFormats = [date.slice(5, 7), date.slice(6, 7)];
     let dayFormats = [date.slice(8, 10), date.slice(9, 10)];
 
-    //input:test | output: test2023-12-05
-    newWord = word + date;
-    wordlist.push(newWord);
-
     for (let i = 0; i < 2; i++) {
       //input:test | output: test1999
       newWord = word + yearFormats[i];
@@ -1004,10 +1068,6 @@ $(document).ready(function () {
     let monthFormats = [date.slice(5, 7), date.slice(6, 7)];
     let dayFormats = [date.slice(8, 10), date.slice(9, 10)];
 
-    //input:test | output: 2023-12-05test
-    newWord = date + word;
-    wordlist.push(newWord);
-
     for (let i = 0; i < 2; i++) {
       //input:test | output: 1999test
       newWord = yearFormats[i] + word;
@@ -1116,10 +1176,6 @@ $(document).ready(function () {
     let monthFormats = [date.slice(5, 7), date.slice(6, 7)];
     let dayFormats = [date.slice(8, 10), date.slice(9, 10)];
 
-    //input: test | output: 2023-12-28test2023-12-28
-    newWord = date + word + date;
-    wordlist.push(newWord);
-
     for (let i = 0; i < 2; i++) {
       //input: test | output: 28test28
       newWord = dayFormats[i] + word + dayFormats[i];
@@ -1222,6 +1278,8 @@ $(document).ready(function () {
   }
 
   function showOutput() {
+    // Convertir todos los elementos a cadenas para que no hayan problemas al eliminar datos duplicados
+    wordlist = wordlist.map(String);
     let listWithUniqueValues = Array.from(new Set(wordlist));
     finalList = listWithUniqueValues.join('\n');
     let showPreview = listWithUniqueValues.slice(0, 25).join('\n');
