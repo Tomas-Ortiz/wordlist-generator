@@ -1279,7 +1279,7 @@ $(document).ready(function () {
     wordlist = wordlist.map(String);
     let listWithUniqueValues = Array.from(new Set(wordlist));
     finalList = listWithUniqueValues.join('\n');
-    let showPreview = listWithUniqueValues.slice(0, 25).join('\n');
+    let showPreview = listWithUniqueValues.slice(0, 13).join('\n');
     let results = listWithUniqueValues.length;
 
     $('#output').val(
