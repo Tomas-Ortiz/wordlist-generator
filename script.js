@@ -137,18 +137,15 @@ $(document).ready(function () {
     });
 
     if (words.length > 0) {
+      words.forEach((word) => {
+        applyAllLowerAndUpperCase(word);
+        applyRemoveLetters(word);
+        onlyBasicWords(word);
+      });
+
       if (includeNumbers) {
         words.forEach((word) => {
-          applyAllLowerAndUpperCase(word);
-          applyRemoveLetters(word);
           applyAllNumbers(word);
-          onlyBasicWords(word);
-        });
-      } else {
-        words.forEach((word) => {
-          applyAllLowerAndUpperCase(word);
-          applyRemoveLetters(word);
-          onlyBasicWords(word);
         });
       }
 
