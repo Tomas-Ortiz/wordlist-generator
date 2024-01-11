@@ -13,11 +13,11 @@ Link: https://tomas-ortiz.github.io/wordlist-generator/
 
 ## Images
 
-![image](https://github.com/Tomas-Ortiz/wordlist-generator/assets/56492312/2f0271e1-1cdf-49ea-b5e6-25acbaa8bfd8)
+![image](https://github.com/Tomas-Ortiz/wordlist-generator/assets/56492312/6c58dc7a-ca17-4142-8818-3b5706609dcf)
 
 Example:
   
-![image](https://github.com/Tomas-Ortiz/wordlist-generator/assets/56492312/be922f45-bc22-4096-b02d-72f72822cda3)
+![image](https://github.com/Tomas-Ortiz/wordlist-generator/assets/56492312/b3be3bee-ee90-468b-b440-c2b59e46c8e8)
 
 ![image](https://github.com/Tomas-Ortiz/wordlist-generator/assets/56492312/9f846f42-0699-45a6-9977-9cbd4109f6b7)
 
